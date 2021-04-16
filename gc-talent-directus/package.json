@@ -1,0 +1,19 @@
+{
+  "name": "gc-talent-directus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "directus": "^9.0.0-rc.59",
+    "pg": "^8.6.0"
+  },
+  "devDependencies": {
+    "knex": "^0.95.4"
+  }
+}

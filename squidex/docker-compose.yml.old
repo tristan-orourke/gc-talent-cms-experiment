@@ -1,0 +1,51 @@
+version: '3.1'
+
+services:
+  squidex_mongo:
+    image: mongo:4.4.1
+    volumes:
+      - squidex_db:/data/db
+    restart: unless-stopped
+    networks:
+      - internal
+
+  squidex_squidex:
+    image: "squidex/squidex:5"
+    ports:
+      - "8060:80"
+    environment:
+      - URLS__BASEURL=http://gc.squidex:8060
+      - URLS__ENFORCE_HTTPS=false
+      - EVENTSTORE__TYPE=MongoDB
+      - EVENTSTORE__MONGODB__CONFIGURATION=mongodb://squidex_mongo
+      - STORE__MONGODB__CONFIGURATION=mongodb://squidex_mongo
+      - IDENTITY__ADMINEMAIL=admin@test.com
+      - IDENTITY__ADMINPASSWORD=Z5aHd4P!DyhsnWe@
+      - IDENTITY__ADMIN_RECREATE=true
+      - IDENTITY__GOOGLECLIENT=
+      - IDENTITY__GOOGLESECRET=
+      - IDENTITY__GITHUBCLIENT=
+      - IDENTITY__GITHUBSECRET=
+      - IDENTITY__MICROSOFTCLIENT=
+      - IDENTITY__MICROSOFTSECRET=
+      - IDENTITY__OIDC_AUTHORITY=keycloak
+      - IDENTITY__OIDC_CLIENT=squidex
+      - IDENTITY__OIDC_SECRET=6c92589c-524b-4d85-a8f4-f0614fd8a09b
+      - IDENTITY__OIDC_METADATA_ADDRESS=http://localhost:8090/auth/realms/gc-talent
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/healthz"]
+      start_period: 60s
+    depends_on:
+      - squidex_mongo
+    volumes:
+      - /squidex/assets:/app/Assets
+    restart: unless-stopped
+    networks:
+      - internal
+
+volumes:
+  squidex_db:
+
+networks:
+  internal:
+    driver: bridge
